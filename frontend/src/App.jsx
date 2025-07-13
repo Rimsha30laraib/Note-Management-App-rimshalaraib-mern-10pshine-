@@ -3,6 +3,7 @@ import Login from './components/Login/login';
 import Signup from './components/Signup/signup';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword';
 import ResetPassword from './components/ResetPassword/ResetPassword';
+import HomePage from './components/HomePage/HomePage';
 function App() {
   return (
     <BrowserRouter>
@@ -12,6 +13,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route path="/homepage" element={<HomePage/>}/>
       </Routes>
     </BrowserRouter>
   );

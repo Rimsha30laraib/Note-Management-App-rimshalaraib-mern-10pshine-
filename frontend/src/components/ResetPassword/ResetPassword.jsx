@@ -1,81 +1,97 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ResetPassword = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email, otp } = location.state || {};
+
   const [newpass, setNewPass] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleNewpass = (e) => {
+  if (!email || !otp) {
+    return <p className="text-center text-red-500 mt-4">Missing email or OTP. Please restart the flow.</p>;
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (newpass !== confirm) {
       setError('Passwords do not match');
       return;
     }
 
-    setError('');
-    console.log('New Password Set:', newpass);
-    alert('Your password has been set successfully!');
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/reset-password', {
+        email,
+        otp,
+        newPassword: newpass,
+      });
+
+      // Automatically login
+      const loginRes = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password: newpass,
+      });
+
+      localStorage.setItem('token', loginRes.data.token);
+      localStorage.setItem('username', loginRes.data.username);
+
+      navigate('/homepage');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Something went wrong');
+    }
   };
 
   return (
     <div className="min-h-screen w-screen overflow-hidden flex items-center justify-center bg-gradient-to-tr from-purple-300 via-pink-300 to-rose-300">
       <div className="bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-2xl w-full max-w-md">
-        <h2 className="text-3xl font-extrabold text-center mb-6 text-gray-900">Set New Password</h2>
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-gray-900">Reset Password</h2>
 
-        <form onSubmit={handleNewpass} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-1">New Password</label>
-            <div className="relative">
-              <input
-                type={showNewPassword ? 'text' : 'password'}
-                value={newpass}
-                placeholder="Enter new password"
-                onChange={(e) => setNewPass(e.target.value)}
-                required
-                className="text-black w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <button
-                type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-3 top-3 text-sm text-gray-600 hover:text-gray-800"
-              >
-                {showNewPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={newpass}
+              onChange={(e) => setNewPass(e.target.value)}
+              required
+              className="text-black w-full px-4 py-3 border border-gray-300 rounded-lg bg-white"
+              placeholder="New password"
+            />
           </div>
 
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-1">Confirm Password</label>
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={confirm}
-                placeholder="Confirm password"
-                onChange={(e) => setConfirm(e.target.value)}
-                required
-                className="text-black w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-3 text-sm text-gray-600 hover:text-gray-800"
-              >
-                {showConfirmPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              required
+              className="text-black w-full px-4 py-3 border border-gray-300 rounded-lg bg-white"
+              placeholder="Confirm new password"
+            />
           </div>
 
-          {error && (
-            <p className="text-sm text-red-600 font-medium -mt-4">{error}</p>
-          )}
+          <div className="text-sm flex items-center gap-2">
+            <input
+              type="checkbox"
+              onChange={(e) => setShowPassword(e.target.checked)}
+              id="showPass"
+            />
+            <label htmlFor="showPass" className="text-gray-700">Show Password</label>
+          </div>
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
             className="w-full bg-yellow-300 text-black font-bold py-3 rounded-lg shadow-md hover:bg-yellow-400 transition"
           >
-            Confirm
+            Confirm & Login
           </button>
         </form>
       </div>
@@ -84,3 +100,4 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
+

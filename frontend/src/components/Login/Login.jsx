@@ -1,16 +1,40 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
-  };
+const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Optional: Store token in localStorage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', data.username); // optional
+
+      navigate('/homepage');
+    } else {
+      alert(data.message || 'Invalid email or password');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Something went wrong. Please try again.');
+  }
+};
 
   return (
     <div className="min-h-screen w-screen overflow-hidden flex items-center justify-center bg-gradient-to-tr from-purple-300 via-pink-300 to-rose-300">
