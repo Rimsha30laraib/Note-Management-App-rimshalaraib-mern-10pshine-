@@ -1,3 +1,4 @@
+
 // add pino logger
 const Note = require('../models/Notes');
 const logger = require('../utils/logger');
@@ -6,6 +7,7 @@ const logger = require('../utils/logger');
 const createNote = async (req, res, next) => {
   try {
     const { title, content } = req.body;
+
     const userId = req.user.id;
 
     const newNote = new Note({ title, content, user: userId });
@@ -23,6 +25,7 @@ const createNote = async (req, res, next) => {
 const getAllNotes = async (req, res, next) => {
   try {
     const userId = req.user.id;
+
     const notes = await Note.find({ user: userId }).sort({ updatedAt: -1 });
 
     logger.info(`Fetched ${notes.length} notes for user ${userId}`);
@@ -87,6 +90,7 @@ const deleteNote = async (req, res, next) => {
     const userId = req.user.id;
 
     const note = await Note.findOneAndDelete({ _id: noteId, user: userId });
+
 
     if (!note) {
       logger.warn(`Delete failed. Note not found: ${noteId} by user ${userId}`);

@@ -1,9 +1,11 @@
+
 // add pino logger
 const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger'); 
 
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
+
 
   if (!token) {
     logger.warn('Access denied: No token provided');
