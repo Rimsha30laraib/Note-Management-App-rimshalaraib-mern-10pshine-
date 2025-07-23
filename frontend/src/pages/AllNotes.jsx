@@ -1,7 +1,8 @@
+// add star for starred notes
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { FaStar, FaRegStar } from "react-icons/fa";
 const AllNotes = () => {
   const [notes, setNotes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,6 +33,15 @@ const AllNotes = () => {
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+const toggleStar = async (id) => {
+  try {
+    await axios.patch(`http://localhost:5000/api/notes/star/${id}`, null, axiosConfig);
+    const res = await axios.get("http://localhost:5000/api/notes/getAllNotes", axiosConfig);
+    setNotes(Array.isArray(res.data) ? res.data : []);
+  } catch (error) {
+    console.error("Error toggling star:", error);
+  }
+};
 
   return (
     <div>
@@ -96,6 +106,10 @@ const AllNotes = () => {
                 >
                   ✖
                 </button>
+                <button onClick={() => toggleStar(note._id)} className="text-yellow-500">
+  {note.starred ? <FaStar /> : <FaRegStar />}
+</button>
+
               </div>
             </div>
           ))
