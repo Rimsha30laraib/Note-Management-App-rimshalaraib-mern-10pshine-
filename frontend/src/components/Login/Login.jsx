@@ -6,35 +6,43 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
+  const navigate = useNavigate();
 
-    const data = await response.json();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (response.ok) {
-      // Optional: Store token in localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', data.username); // optional
+      const data = await response.json();
 
-      navigate('/homepage');
-    } else {
-      alert(data.message || 'Invalid email or password');
+      if (response.ok) {
+        // Optional: Store token in localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username); // optional
+
+        navigate('/homepage');
+      } else {
+        // alert(data.message || 'Invalid email or password');
+        setErrorMessage(data.message || 'Invalid email or password');
+
+
+      }
+    } catch (error) {
+
+
+      console.error('Login error:', error);
+      // alert('Something went wrong. Please try again.');
+      setErrorMessage('Something went wrong. Please try again.');
     }
-  } catch (error) {
-    console.error('Login error:', error);
-    alert('Something went wrong. Please try again.');
-  }
-};
+  };
 
   return (
     <div className="min-h-screen w-screen overflow-hidden flex items-center justify-center bg-gradient-to-tr from-purple-300 via-pink-300 to-rose-300">
@@ -72,6 +80,10 @@ const handleLogin = async (e) => {
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
+              {errorMessage && (
+                <p className="text-sm text-red-600 mt-1">{errorMessage}</p>
+              )}
+
             </div>
           </div>
 

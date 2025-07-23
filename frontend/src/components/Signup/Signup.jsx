@@ -8,59 +8,31 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-const navigate = useNavigate();
-
-  // const handleSignup = (e) => {
-  //   e.preventDefault();
-  //   console.log('Username:', username);
-  //   console.log('Email:', email);
-  //   console.log('Password:', password);
-  // };
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
 
-// const handleSignup = async (e) => {
-//   e.preventDefault();
-//   try {
-//     const res = await axios.post('http://localhost:5000/api/auth/signup', {
-//       username,
-//       email,
-//       password
-//     });
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/signup', {
+        username,
+        email,
+        password
+      });
 
-//     localStorage.setItem('token', res.data.token); // store token
-//     alert('Signup successful!');
-//     // navigate to dashboard or login
-//   } catch (err) {
-//     alert(err.response?.data?.message || 'Signup failed');
-//   }
-// };
-const handleSignup = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await fetch('http://localhost:5000/api/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, email, password }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      // Optional: Store token in localStorage
-      localStorage.setItem('token', data.token);
-
-      // ✅ Redirect to home page
-      navigate('/homepage');
-    } else {
-      alert(data.message || 'Signup failed');
+      if (res.data && res.data.token) {
+        localStorage.setItem('token', res.data.token);
+        // alert('Signup successful!');
+        navigate('/homepage');
+      } else {
+        setErrorMessage(res.data.message || 'User already exists');
+      }
+    } catch (err) {
+      console.error('Signup failed:', err);
+      setErrorMessage(err.response?.data?.message || 'Signup failed');
     }
-  } catch (error) {
-    console.error('Signup error:', error);
-    alert('Something went wrong. Please try again.');
-  }
-};
+  };
 
   return (
     <div className="min-h-screen w-screen overflow-hidden flex items-center justify-center bg-gradient-to-tr from-purple-300 via-pink-300 to-rose-300">
@@ -110,12 +82,17 @@ const handleSignup = async (e) => {
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
+              {errorMessage && (
+                <p className="text-sm text-red-600 mt-2">{errorMessage}</p>
+              )}
+
             </div>
           </div>
 
           <button type="submit" className="w-full bg-yellow-300 text-black font-bold py-3 rounded-lg shadow-md hover:bg-yellow-400 transition">
             Signup
           </button>
+
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-700">
