@@ -15,7 +15,10 @@ const noteSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
-  }
+  }, starred: {
+    type: Boolean,
+    default: false,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Note', noteSchema);
