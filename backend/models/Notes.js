@@ -1,4 +1,6 @@
+// add starred
 const mongoose = require('mongoose');
+const { starred } = require('../controllers/noteController');
 
 const noteSchema = new mongoose.Schema({
   user: {

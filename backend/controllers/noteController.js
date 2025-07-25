@@ -1,5 +1,4 @@
-
-// add pino logger
+// addd starred
 const Note = require('../models/Notes');
 const logger = require('../utils/logger');
 
