@@ -1,4 +1,4 @@
-// add routes
+// add routes for starred
 const express = require('express');
 const router = express.Router();
 const {

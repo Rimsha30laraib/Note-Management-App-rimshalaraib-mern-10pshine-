@@ -1,4 +1,4 @@
-// add starred
+// add starred in schema
 const mongoose = require('mongoose');
 const { starred } = require('../controllers/noteController');
 

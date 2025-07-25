@@ -1,4 +1,4 @@
-// addd starred
+// addd starred amd get starrednotes 
 const Note = require('../models/Notes');
 const logger = require('../utils/logger');
 
