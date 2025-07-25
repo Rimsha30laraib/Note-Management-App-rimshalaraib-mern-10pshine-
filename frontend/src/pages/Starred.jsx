@@ -1,3 +1,4 @@
+// add starred
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +35,7 @@ const StarredNotes = () => {
   const toggleStar = async (id) => {
     try {
       await axios.patch(`http://localhost:5000/api/notes/star/${id}`, null, axiosConfig);
-      fetchStarredNotes(); // refresh after toggle
+      fetchStarredNotes(); 
     } catch (error) {
       console.error("Error toggling star:", error);
     }

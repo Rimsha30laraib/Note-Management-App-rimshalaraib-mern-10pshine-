@@ -1,3 +1,4 @@
+// add star for starred notes
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +36,6 @@ const AllNotes = () => {
 const toggleStar = async (id) => {
   try {
     await axios.patch(`http://localhost:5000/api/notes/star/${id}`, null, axiosConfig);
-    // re-fetch or update state manually
     const res = await axios.get("http://localhost:5000/api/notes/getAllNotes", axiosConfig);
     setNotes(Array.isArray(res.data) ? res.data : []);
   } catch (error) {
