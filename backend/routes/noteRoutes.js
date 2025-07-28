@@ -1,4 +1,4 @@
-// add routes
+// add routes for starred
 const express = require('express');
 const router = express.Router();
 const {
@@ -7,26 +7,22 @@ const {
   getNoteById,
   updateNote,
   deleteNote,
+  starred,
+  getStarredNotes,
 } = require('../controllers/noteController');
 
-const authMiddleware = require('../middleware/authMiddleware'); // assumes JWT authentication middleware
+const authMiddleware = require('../middleware/authMiddleware');
 
-// Apply authMiddleware to all note routes
+// Apply to all routes
 router.use(authMiddleware);
 
-// Create a new note
 router.post('/createNote', createNote);
-
-// Get all notes for logged-in user
 router.get('/getAllNotes', getAllNotes);
-
-// Get a specific note by ID
+router.get('/starred', getStarredNotes);
+router.patch('/star/:id', starred); 
 router.get('/:id', getNoteById);
-
-// Update a note by ID
 router.put('/:id', updateNote);
-
-// Delete a note by ID
 router.delete('/:id', deleteNote);
+
 
 module.exports = router;
