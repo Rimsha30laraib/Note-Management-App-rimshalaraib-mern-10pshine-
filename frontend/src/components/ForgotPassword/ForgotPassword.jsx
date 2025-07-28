@@ -1,21 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
-  const [otpError, setOtpError] = useState("");
-  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setOtpError("");
-    setInfo("");
     setLoading(true);
 
     try {
@@ -27,13 +22,13 @@ const ForgotPassword = () => {
 
       const data = await res.json();
       if (res.ok) {
-        setInfo("OTP sent to your email.");
+        toast.success("OTP sent to your email");
         setShowModal(true);
       } else {
-        setError(data.message || "Failed to send OTP");
+        toast.error(data.message || "Failed to send OTP");
       }
     } catch {
-      setError("Server error");
+      toast.error("Server error");
     } finally {
       setLoading(false);
     }
@@ -41,7 +36,6 @@ const ForgotPassword = () => {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    setOtpError("");
 
     try {
       const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
@@ -52,13 +46,14 @@ const ForgotPassword = () => {
 
       const data = await res.json();
       if (res.ok) {
+        toast.success("OTP verified");
         setShowModal(false);
         navigate(`/resetpassword`, { state: { email, otp } });
       } else {
-        setOtpError(data.message || "Invalid OTP");
+        toast.error(data.message || "Invalid OTP");
       }
     } catch {
-      setOtpError("Server error");
+      toast.error("Server error");
     }
   };
 
@@ -81,8 +76,6 @@ const ForgotPassword = () => {
               className="w-full px-4 py-3 border rounded-lg text-black"
               placeholder="Enter email"
             />
-            {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
-            {info && <p className="text-green-600 text-sm mt-1">{info}</p>}
           </div>
 
           <button
@@ -102,7 +95,6 @@ const ForgotPassword = () => {
         </p>
       </div>
 
-      {/* OTP Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gradient-to-tr from-purple-300 via-pink-300 to-rose-300 z-50 flex items-center justify-center">
           <div className="bg-white/90 p-8 rounded-3xl shadow-2xl w-full max-w-md relative">
@@ -128,7 +120,6 @@ const ForgotPassword = () => {
                 className="w-full px-4 py-3 border rounded-lg text-black"
                 placeholder="Enter 6-digit OTP"
               />
-              {otpError && <p className="text-red-600 text-sm text-center">{otpError}</p>}
               <button
                 type="submit"
                 className="w-full bg-yellow-300 text-black font-bold py-2 rounded-lg hover:bg-yellow-400"

@@ -7,12 +7,14 @@ import {
   FaPlusCircle,
   FaUser,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Sidebar = () => {
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
+      toast.success("Logged out successfully!");
     navigate("/login");
   };
 

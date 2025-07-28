@@ -1,8 +1,9 @@
-// add starred
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar, FaRegStar, FaEdit, FaTimesCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
+
 
 const StarredNotes = () => {
   const [notes, setNotes] = useState([]);
@@ -35,9 +36,11 @@ const StarredNotes = () => {
   const toggleStar = async (id) => {
     try {
       await axios.patch(`http://localhost:5000/api/notes/star/${id}`, null, axiosConfig);
-      fetchStarredNotes(); 
+      toast.info("Note unstarred", { position: "top-right", autoClose: 1500 });
+      fetchStarredNotes();
     } catch (error) {
       console.error("Error toggling star:", error);
+      toast.error("Error un-starring note");
     }
   };
 
@@ -55,7 +58,7 @@ const StarredNotes = () => {
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-5xl font-bold mb-8 text-center text-yellow-600 drop-shadow-lg">
+      <h1 className="text-5xl font-bold mb-8 text-center text-white-600 drop-shadow-lg">
         ⭐ Starred Notes
       </h1>
 
@@ -81,7 +84,6 @@ const StarredNotes = () => {
                 🕒 Last updated: {new Date(note.updatedAt).toLocaleString()}
               </div>
 
-              {/* Action buttons */}
               <div className="absolute top-3 right-3 flex space-x-2">
                 <button
                   onClick={() =>
@@ -92,7 +94,7 @@ const StarredNotes = () => {
                   className="text-blue-600 hover:text-blue-800 text-lg"
                   title="Edit"
                 >
-                  ✎
+                  <FaEdit />
                 </button>
 
                 <button
@@ -103,7 +105,7 @@ const StarredNotes = () => {
                   className="text-red-500 hover:text-red-700 text-lg"
                   title="Delete"
                 >
-                  ✖
+                  <FaTimesCircle />
                 </button>
 
                 <button
@@ -119,7 +121,7 @@ const StarredNotes = () => {
         </div>
       )}
 
-      {/* Delete confirm modal */}
+      {/* Delete Confirm Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 w-[90%] max-w-sm text-center shadow-2xl">
@@ -146,6 +148,7 @@ const StarredNotes = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

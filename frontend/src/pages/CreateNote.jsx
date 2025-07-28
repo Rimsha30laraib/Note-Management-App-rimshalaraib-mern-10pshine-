@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TiptapEditor from "../components/TipTapEditor/TipTapEditor.jsx";
+import { toast } from "react-toastify";
 
 const CreateNote = () => {
   const [notes, setNotes] = useState([]);
@@ -36,6 +37,7 @@ const CreateNote = () => {
           axiosConfig
         );
         setNotes(notes.map((note) => (note._id === editId ? res.data : note)));
+        toast.success("Note updated successfully!");
         setEditId(null);
       } else {
         const res = await axios.post(
@@ -44,9 +46,7 @@ const CreateNote = () => {
           axiosConfig
         );
         setNotes([res.data, ...notes]);
-
-        // Success alert and navigate
-        alert("✅ Note created successfully!");
+        toast.success(" Note created successfully!");
         navigate("/homepage");
       }
 
@@ -54,6 +54,7 @@ const CreateNote = () => {
       setError("");
     } catch (err) {
       console.error("Error creating/updating note:", err);
+      toast.error(" Something went wrong. Please try again.");
       setError("Something went wrong. Please try again.");
     }
   };

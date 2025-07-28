@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return;
+    }
+
     try {
       const res = await axios.post('http://localhost:5000/api/auth/signup', {
         username,
@@ -23,14 +28,14 @@ const Signup = () => {
 
       if (res.data && res.data.token) {
         localStorage.setItem('token', res.data.token);
-        // alert('Signup successful!');
+        toast.success('Signup successful!');
         navigate('/homepage');
       } else {
-        setErrorMessage(res.data.message || 'User already exists');
+        toast.error(res.data.message || 'User already exists');
       }
     } catch (err) {
       console.error('Signup failed:', err);
-      setErrorMessage(err.response?.data?.message || 'Signup failed');
+      toast.error(err.response?.data?.message || 'Signup failed');
     }
   };
 
@@ -82,17 +87,12 @@ const Signup = () => {
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
-              {errorMessage && (
-                <p className="text-sm text-red-600 mt-2">{errorMessage}</p>
-              )}
-
             </div>
           </div>
 
           <button type="submit" className="w-full bg-yellow-300 text-black font-bold py-3 rounded-lg shadow-md hover:bg-yellow-400 transition">
             Signup
           </button>
-
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-700">
