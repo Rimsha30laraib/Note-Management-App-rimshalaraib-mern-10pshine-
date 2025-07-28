@@ -1,6 +1,32 @@
-// addd starred
+// addd starred amd get starrednotes 
 const Note = require('../models/Notes');
 const logger = require('../utils/logger');
+
+// In routes/noteRoutes.js or your note controller
+const starred = async (req, res) => {
+  try {
+    const note = await Note.findById(req.params.id);
+    if (!note) return res.status(404).json({ error: 'Note not found' });
+
+    note.starred = !note.starred;
+    await note.save();
+
+    res.json({ success: true, starred: note.starred });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+// Get only starred notes for the authenticated user
+const getStarredNotes = async (req, res) => {
+  try {
+     console.log("User ID from token:", req.user); // 👈 Check this
+    const notes = await Note.find({ user: req.user.id, starred: true }).sort({ updatedAt: -1 });
+    res.json(notes);
+  } catch (err) {
+    console.error("Error getting starred notes", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 // CREATE a new note
 const createNote = async (req, res, next) => {
@@ -109,5 +135,7 @@ module.exports = {
   getAllNotes,
   getNoteById,
   updateNote,
-  deleteNote
+  deleteNote,
+  starred,
+  getStarredNotes
 };
