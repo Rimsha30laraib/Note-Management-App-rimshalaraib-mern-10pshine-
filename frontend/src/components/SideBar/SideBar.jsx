@@ -6,14 +6,16 @@ import {
   FaSignOutAlt,
   FaPlusCircle,
   FaUser,
+  FaTimes,
 } from "react-icons/fa";
 
-const Sidebar = () => {
+const Sidebar = ({ onNavigate, showClose = false }) => {
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
+    onNavigate?.();
   };
 
   const linkClass =
@@ -22,8 +24,18 @@ const Sidebar = () => {
   const inactiveClass = "text-gray-700 hover:bg-purple-100";
 
   return (
-    <div className="w-64 h-full flex flex-col justify-between bg-gradient-to-r  from-purple-100 via-white to-pink-100 backdrop-blur-md  shadow-lg ">
-      <div className="overflow-y-auto flex-grow">
+    <div className="w-64 h-full flex flex-col justify-between bg-gradient-to-r from-purple-100 via-white to-pink-100 backdrop-blur-md shadow-lg overflow-y-auto">
+      <div className="overflow-y-auto flex-grow relative">
+        
+        {showClose && (
+          <button
+            onClick={onNavigate}
+            className="absolute top-3 right-3 text-purple-700 text-xl md:hidden"
+          >
+            <FaTimes />
+          </button>
+        )}
+
         <h2 className="text-2xl font-bold text-purple-700 px-6 py-6 flex items-center gap-3">
           <span className="text-3xl">📝</span> Categories
         </h2>
@@ -31,6 +43,7 @@ const Sidebar = () => {
         <nav className="space-y-2 mt-2 px-4">
           <NavLink
             to="/homepage"
+            onClick={onNavigate}
             className={({ isActive }) =>
               `${linkClass} ${isActive ? activeClass : inactiveClass}`
             }
@@ -41,6 +54,7 @@ const Sidebar = () => {
 
           <NavLink
             to="/homepage/newnote"
+            onClick={onNavigate}
             className={({ isActive }) =>
               `${linkClass} ${isActive ? activeClass : inactiveClass}`
             }
@@ -50,6 +64,7 @@ const Sidebar = () => {
 
           <NavLink
             to="/homepage/starred"
+            onClick={onNavigate}
             className={({ isActive }) =>
               `${linkClass} ${isActive ? activeClass : inactiveClass}`
             }
@@ -57,17 +72,19 @@ const Sidebar = () => {
             <FaStar /> Starred
           </NavLink>
 
-          <NavLink
+          {/* <NavLink
             to="/homepage/trash"
+            onClick={onNavigate}
             className={({ isActive }) =>
               `${linkClass} ${isActive ? activeClass : inactiveClass}`
             }
           >
             <FaTrash /> Trash
-          </NavLink>
+          </NavLink> */}
 
           <NavLink
             to="/homepage/account"
+            onClick={onNavigate}
             className={({ isActive }) =>
               `${linkClass} ${isActive ? activeClass : inactiveClass}`
             }
