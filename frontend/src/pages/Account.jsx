@@ -1,5 +1,5 @@
-//add account
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import { toast } from 'react-toastify';
@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchUserInfo = async () => {
     try {
@@ -44,9 +45,21 @@ const Account = () => {
     fetchUserInfo();
   }, []);
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100 text-gray-600 text-lg">
+        Loading...
+      </div>
+    );
+  }
 
-  if (!user) return <div className="p-4 text-red-500">User not found</div>;
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100 text-red-500 font-semibold">
+        User not found
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-purple-300 via-pink-300 to-rose-300 px-4">
@@ -68,6 +81,13 @@ const Account = () => {
             </p>
           </div>
         </div>
+
+        <button
+          onClick={handleLogout}
+          className="w-full mt-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition duration-200 shadow flex items-center justify-center gap-2"
+        >
+          <FaSignOutAlt /> Logout
+        </button>
       </div>
     </div>
   );

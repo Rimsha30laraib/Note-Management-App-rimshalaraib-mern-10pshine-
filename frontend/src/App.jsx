@@ -4,7 +4,6 @@ import Signup from './components/Signup/Signup';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword';
 import ResetPassword from './components/ResetPassword/ResetPassword';
 import HomePage from './components/HomePage/HomePage';
-
 import AllNotes from "./pages/AllNotes";
 import Starred from "./pages/Starred";
 import Trash from "./pages/Trash";
@@ -21,6 +20,7 @@ function App() {
          <ToastContainer position="top-center" autoClose={3000} />
 
       <Routes>
+       
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
