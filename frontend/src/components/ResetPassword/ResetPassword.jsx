@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -9,7 +10,6 @@ const ResetPassword = () => {
 
   const [newpass, setNewPass] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   if (!email || !otp) {
@@ -20,7 +20,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (newpass !== confirm) {
-      setError('Passwords do not match');
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -31,7 +31,8 @@ const ResetPassword = () => {
         newPassword: newpass,
       });
 
-      // Automatically login
+      toast.success("Password reset successful. Logging in...");
+
       const loginRes = await axios.post('http://localhost:5000/api/auth/login', {
         email,
         password: newpass,
@@ -39,10 +40,9 @@ const ResetPassword = () => {
 
       localStorage.setItem('token', loginRes.data.token);
       localStorage.setItem('username', loginRes.data.username);
-
       navigate('/homepage');
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong');
+      toast.error(err.response?.data?.message || 'Something went wrong');
     }
   };
 
@@ -85,8 +85,6 @@ const ResetPassword = () => {
             <label htmlFor="showPass" className="text-gray-700">Show Password</label>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
-
           <button
             type="submit"
             className="w-full bg-yellow-300 text-black font-bold py-3 rounded-lg shadow-md hover:bg-yellow-400 transition"
@@ -100,4 +98,3 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
-

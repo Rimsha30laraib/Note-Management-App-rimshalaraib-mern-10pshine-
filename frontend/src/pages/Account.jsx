@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 const Account = () => {
   const [user, setUser] = useState(null);
@@ -11,7 +12,11 @@ const Account = () => {
   const fetchUserInfo = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        toast.error("Token missing. Please login again.");
+        setLoading(false);
+        return;
+      }
 
       const res = await axios.get("http://localhost:5000/api/auth/me", {
         headers: {
@@ -22,6 +27,7 @@ const Account = () => {
       setUser(res.data);
     } catch (err) {
       console.error("Error fetching user info:", err);
+      toast.error("Failed to fetch user info. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -29,7 +35,10 @@ const Account = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    toast.success("Logged out successfully!");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000); 
   };
 
   useEffect(() => {
@@ -56,7 +65,7 @@ const Account = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-purple-300 via-pink-300 to-rose-300 px-4">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-sm p-6 sm:p-8 border border-gray-200">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center flex items-center justify-center gap-2">
-          <FaUser  /> Account Info
+          <FaUser /> Account Info
         </h1>
 
         <div className="flex items-center gap-4 sm:gap-6 mb-6">

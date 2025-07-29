@@ -11,10 +11,14 @@ import CreateNote from "./pages/CreateNote";
 import Account from "./pages/Account";
 import EditNote from "./pages/EditNote";
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+ 
 function App() {
   return (
     <BrowserRouter>
+         <ToastContainer position="top-center" autoClose={3000} />
+
       <Routes>
        
         <Route path="/" element={<Login />} />
@@ -23,7 +27,7 @@ function App() {
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
 
-     
+
         <Route
           path="/homepage"
           element={

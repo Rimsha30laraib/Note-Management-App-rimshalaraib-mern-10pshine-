@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import TiptapEditor from "../components/TipTapEditor/TipTapEditor.jsx";
+import { toast } from "react-toastify";
+
 
 const EditNote = () => {
   const [note, setNote] = useState({ title: "", content: "" });
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  const { id } = useParams(); // Get note ID from URL
+  const { id } = useParams(); 
   const token = localStorage.getItem("token");
 
   const axiosConfig = {
@@ -17,7 +19,6 @@ const EditNote = () => {
     },
   };
 
-  // Fetch existing note on load
   useEffect(() => {
     const fetchNote = async () => {
       try {
@@ -35,7 +36,6 @@ const EditNote = () => {
     fetchNote();
   }, [id]);
 
-  // Handle save
   const handleSave = async () => {
     if (!note.title.trim()) {
       setError("Title is required.");
@@ -52,15 +52,20 @@ const EditNote = () => {
         note,
         axiosConfig
       );
-      alert("✅ Note updated successfully!");
-      navigate("/homepage");
+      toast.success("Note updated successfully!", {
+        position: "top-center",
+        autoClose: 1500,
+      });
+
+      setTimeout(() => {
+        navigate("/homepage");
+      }, 1600); 
     } catch (err) {
       console.error("Error updating note:", err);
-      setError("Something went wrong while saving.");
+      toast.error("❌ Something went wrong while saving.");
     }
   };
 
-  // Cancel editing
   const handleCancel = () => {
     navigate("/homepage");
   };
@@ -108,6 +113,7 @@ const EditNote = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };

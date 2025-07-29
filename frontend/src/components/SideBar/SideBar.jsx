@@ -8,12 +8,14 @@ import {
   FaUser,
   FaTimes,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Sidebar = ({ onNavigate, showClose = false }) => {
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
+      toast.success("Logged out successfully!");
     navigate("/login");
     onNavigate?.();
   };
