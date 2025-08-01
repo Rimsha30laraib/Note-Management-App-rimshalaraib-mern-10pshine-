@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "commonjs",
+  
   "scripts": {
-    "test": "mocha test/**/*.test.js"
-  },
+  "test": "mocha",
+  "test:users": "mocha test/users.test.js",
+  "test:notes": "mocha test/notes.test.js"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -1,3 +1,4 @@
+//  run using this command : npm run test:users
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../server');
