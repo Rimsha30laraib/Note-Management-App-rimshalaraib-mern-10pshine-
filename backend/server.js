@@ -1,14 +1,14 @@
-// add pino logger correctly
 const app = require('./app');
 const logger = require('./utils/logger');
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   logger.info(`🚀 Server running on port ${PORT}`);
 });
 
-// Error handling
 process.on('unhandledRejection', (err) => {
-  logger.error('Unhandled Rejection:', err.message);
+  logger.error('❌ Unhandled Rejection:', err.message);
 });
+
+module.exports = server; 
