@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@sonar/scan": "^4.3.0"
+  },
+  "scripts": {
+    "sonar": "sonar"
+  }
+}
