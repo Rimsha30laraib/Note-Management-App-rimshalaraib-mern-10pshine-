@@ -1,0 +1,15 @@
+{
+    "verrion":2,
+    "builds":[
+    {
+        "src":"*.js",
+        "use":"@vercel/node"
+    }
+    ],
+    "roures":[
+        {
+            "src":"/(.*)",
+            "dest":"/"
+        }
+    ]
+}
