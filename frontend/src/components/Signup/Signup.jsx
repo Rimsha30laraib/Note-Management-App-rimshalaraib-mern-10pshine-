@@ -20,7 +20,13 @@ const Signup = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/signup', {
+      // const res = await axios.post('http://localhost:5000/api/auth/signup', {
+      //   username,
+      //   email,
+      //   password
+      // });
+        const res = await axios.post('note-management-backend-deploy-owm0t882m.vercel.app
+/api/auth/signup', {
         username,
         email,
         password
